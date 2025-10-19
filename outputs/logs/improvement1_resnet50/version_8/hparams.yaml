@@ -1,0 +1,5 @@
+classes: 3
+encoder_name: resnet50
+lr: 0.001
+use_dice_loss: false
+weight_decay: 0.0001
