@@ -5,7 +5,7 @@ import numpy as np
 from PIL import Image
 
 import torch
-from torch.utils.data import Dataset, DataLoader, random_split
+from torch.utils.data import Dataset, DataLoader, random_split, Subset
 import torchvision.transforms.functional as TF
 import torchvision.transforms as T
 import pytorch_lightning as pl
@@ -19,19 +19,14 @@ class OxfordPetDataset(Dataset):
         self.transform = transform
         self.augment = augment
 
-        # Load filenames from split file
         split_file = self.root / 'annotations' / f'{split}.txt'
         with open(split_file) as f:
-            lines = f.readlines()
-            self.filenames = []
-            for line in lines:
-                line = line.strip()
-                if line:
-                    filename = line.split()[0]
-                    self.filenames.append(filename)
+            self.filenames = [line.strip().split()[0] for line in f if line.strip()]
 
         self.img_dir = self.root / 'images'
         self.mask_dir = self.root / 'annotations' / 'trimaps'
+
+        self.num_classes = 3 if classes == 'trimap' else 2
 
     def __len__(self):
         return len(self.filenames)
@@ -40,10 +35,12 @@ class OxfordPetDataset(Dataset):
         """Convert trimap values (1,2,3) to class indices (0,1,2)"""
         m = np.array(mask, dtype=np.int64)
         if self.classes == 'trimap':
-            m = m - 1  # 0=pet, 1=background, 2=border
+            m = m - 1  # Ensure 0,1,2
         else:
             pet = (m == 1) | (m == 3)
             m = pet.astype(np.int64)
+        # Safety clamp
+        m = np.clip(m, 0, self.num_classes - 1)
         return torch.tensor(m, dtype=torch.long)
 
     def __getitem__(self, idx):
@@ -55,28 +52,21 @@ class OxfordPetDataset(Dataset):
         mask = Image.open(mask_path)
 
         # Resize
-        img = TF.resize(img, [self.img_size, self.img_size], 
-                       interpolation=Image.BILINEAR)
-        mask = TF.resize(mask, [self.img_size, self.img_size], 
-                        interpolation=Image.NEAREST)
+        img = TF.resize(img, [self.img_size, self.img_size], interpolation=Image.BILINEAR)
+        mask = TF.resize(mask, [self.img_size, self.img_size], interpolation=Image.NEAREST)
 
-        # Apply augmentation if enabled (for training only)
+        # Augmentation (only training)
         if self.augment:
-            # Random horizontal flip
             if random.random() > 0.5:
                 img = TF.hflip(img)
                 mask = TF.hflip(mask)
-            
-            # Random rotation (-15 to +15 degrees)
             if random.random() > 0.5:
                 angle = random.uniform(-15, 15)
                 img = TF.rotate(img, angle, interpolation=Image.BILINEAR)
                 mask = TF.rotate(mask, angle, interpolation=Image.NEAREST)
 
-        # Convert mask to class indices
         mask = self.mask_to_classes(mask)
 
-        # Apply transforms to image (ToTensor + ColorJitter + Normalize)
         if self.transform:
             img = self.transform(img)
 
@@ -93,59 +83,48 @@ class OxfordPetDataModule(pl.LightningDataModule):
         self.use_augmentation = use_augmentation
 
     def setup(self, stage=None):
-        # Training transforms WITH augmentation
+        # Transforms
         train_transform = T.Compose([
             T.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.1),
             T.ToTensor(),
             T.Normalize(mean=[0.485, 0.456, 0.406],
-                       std=[0.229, 0.224, 0.225])
+                        std=[0.229, 0.224, 0.225])
         ])
-        
-        # Val/Test transforms WITHOUT augmentation
         val_transform = T.Compose([
             T.ToTensor(),
             T.Normalize(mean=[0.485, 0.456, 0.406],
-                       std=[0.229, 0.224, 0.225])
+                        std=[0.229, 0.224, 0.225])
         ])
-        
-        # Load full trainval dataset
+
         full_ds = OxfordPetDataset(
-            self.root, 
-            split='trainval',
+            self.root, split='trainval',
             img_size=self.img_size,
             classes=self.classes,
             transform=train_transform,
-            augment=self.use_augmentation  # Only augment if flag is True
+            augment=self.use_augmentation
         )
-        
-        # Split train/val 80/20 with fixed seed
+
         n_train = int(0.8 * len(full_ds))
         n_val = len(full_ds) - n_train
         train_ds, val_ds = random_split(
-            full_ds, 
-            [n_train, n_val],
+            full_ds, [n_train, n_val],
             generator=torch.Generator().manual_seed(42)
         )
-        
-        # Wrap train dataset to use augmentation
-        self.train_ds = train_ds
-        
-        # Create separate validation dataset WITHOUT augmentation
-        val_ds_no_aug = OxfordPetDataset(
-            self.root, 
-            split='trainval',
+
+        # For validation, create a clean dataset (no augmentation, proper transform)
+        val_full = OxfordPetDataset(
+            self.root, split='trainval',
             img_size=self.img_size,
             classes=self.classes,
             transform=val_transform,
-            augment=False  # No augmentation for validation
+            augment=False
         )
-        # Use same indices as validation split
-        self.val_ds = torch.utils.data.Subset(val_ds_no_aug, val_ds.indices)
+        self.val_ds = Subset(val_full, val_ds.indices)
+        self.train_ds = train_ds
 
-        # Test dataset (no augmentation)
+        # Test dataset
         self.test_ds = OxfordPetDataset(
-            self.root, 
-            split='test',
+            self.root, split='test',
             img_size=self.img_size,
             classes=self.classes,
             transform=val_transform,
@@ -153,31 +132,13 @@ class OxfordPetDataModule(pl.LightningDataModule):
         )
 
     def train_dataloader(self):
-        return DataLoader(
-            self.train_ds, 
-            batch_size=self.batch_size, 
-            shuffle=True,
-            num_workers=self.num_workers,
-            persistent_workers=True if self.num_workers > 0 else False,
-            pin_memory=True
-        )
+        return DataLoader(self.train_ds, batch_size=self.batch_size, shuffle=True,
+                          num_workers=self.num_workers, pin_memory=True)
 
     def val_dataloader(self):
-        return DataLoader(
-            self.val_ds, 
-            batch_size=self.batch_size, 
-            shuffle=False,
-            num_workers=self.num_workers,
-            persistent_workers=True if self.num_workers > 0 else False,
-            pin_memory=True
-        )
+        return DataLoader(self.val_ds, batch_size=self.batch_size, shuffle=False,
+                          num_workers=self.num_workers, pin_memory=True)
 
     def test_dataloader(self):
-        return DataLoader(
-            self.test_ds, 
-            batch_size=self.batch_size, 
-            shuffle=False,
-            num_workers=self.num_workers,
-            persistent_workers=True if self.num_workers > 0 else False,
-            pin_memory=True
-        )
+        return DataLoader(self.test_ds, batch_size=self.batch_size, shuffle=False,
+                          num_workers=self.num_workers, pin_memory=True)

@@ -11,32 +11,30 @@ from model_unetpp import UNetPlusPlusModule
 from viz import create_comparison_grid, save_single_prediction
 import torchmetrics
 
-
 def train(args):
     """Train the model"""
-    # Set seed for reproducibility
     pl.seed_everything(42, workers=True)
-    
-    # Initialize data module
+
+    # Data
     dm = OxfordPetDataModule(
         root=args.data_root,
         batch_size=args.batch_size,
         img_size=args.img_size,
         num_workers=args.num_workers,
         classes=args.classes,
-        use_augmentation=args.use_augmentation  # NEW
+        use_augmentation=args.use_augmentation
     )
-    
-    # Initialize model
+
+    # Model
     num_classes = 3 if args.classes == 'trimap' else 2
     model = UNetPlusPlusModule(
         classes=num_classes,
         lr=args.lr,
         weight_decay=args.weight_decay,
         encoder_name=args.encoder,
-        use_dice_loss=args.use_dice_loss  # NEW
+        use_dice_loss=args.use_dice_loss
     )
-    
+
     # Callbacks
     checkpoint_callback = ModelCheckpoint(
         dirpath=args.output_dir / 'checkpoints',
@@ -46,16 +44,16 @@ def train(args):
         save_top_k=3,
         save_last=True
     )
-    
+
     early_stop_callback = EarlyStopping(
         monitor='val_loss',
         patience=10,
         mode='min',
         verbose=True
     )
-    
+
     lr_monitor = LearningRateMonitor(logging_interval='epoch')
-    
+
     # Logger
     if args.use_wandb:
         logger = WandbLogger(
@@ -68,17 +66,11 @@ def train(args):
             save_dir=args.output_dir / 'logs',
             name=args.exp_name
         )
-    
+
     # Trainer
-    if torch.cuda.is_available() and torch.version.cuda.startswith("12"):
-        accelerator = 'gpu'
-        devices = 1
-        precision = args.precision
-    else:
-        print("WARNING: CUDA not available or incompatible. Using CPU.")
-        accelerator = 'cpu'
-        devices = 1
-        precision = 32  # AMP only works on GPU
+    accelerator = 'gpu' if torch.cuda.is_available() else 'cpu'
+    devices = 1
+    precision = args.precision if accelerator == 'gpu' else 32
 
     trainer = pl.Trainer(
         max_epochs=args.epochs,
@@ -90,17 +82,16 @@ def train(args):
         log_every_n_steps=10,
         deterministic=False
     )
-    
-    # Train
+
     print("\n" + "="*60)
     print("Starting training...")
     print("="*60)
     trainer.fit(model, dm)
-    
+
     print(f"\nTraining complete!")
     print(f"Best checkpoint: {checkpoint_callback.best_model_path}")
     print(f"Best val_mIoU: {checkpoint_callback.best_model_score:.4f}")
-    
+
     return checkpoint_callback.best_model_path
 
 
@@ -109,62 +100,51 @@ def evaluate(checkpoint_path, args):
     print("\n" + "="*60)
     print("Starting evaluation on test set...")
     print("="*60)
-    
-    # Load data
+
+    # Data
     dm = OxfordPetDataModule(
         root=args.data_root,
         batch_size=args.batch_size,
         img_size=args.img_size,
         num_workers=args.num_workers,
         classes=args.classes,
-        use_augmentation=False  # Don't augment during eval
+        use_augmentation=False
     )
     dm.setup()
-    
-    # Load best model
+
+    # Model
     model = UNetPlusPlusModule.load_from_checkpoint(checkpoint_path)
     model.eval()
-    
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = model.to(device)
-    
-    # Get test dataloader
+
     test_loader = dm.test_dataloader()
-    
-    # Metrics
     num_classes = 3 if args.classes == 'trimap' else 2
+
     iou_metric = torchmetrics.JaccardIndex(
-        num_classes=num_classes, 
+        num_classes=num_classes,
         task="multiclass",
         average='none'
     ).to(device)
-    
     dice_metric = torchmetrics.F1Score(
         num_classes=num_classes,
         task="multiclass",
         average='none'
     ).to(device)
-    
-    # Collect samples for visualization
-    vis_images = []
-    vis_gt_masks = []
-    vis_pred_masks = []
-    
-    print("Evaluating...")
+
+    vis_images, vis_gt_masks, vis_pred_masks = [], [], []
+
     with torch.no_grad():
-        for batch_idx, (imgs, masks) in enumerate(tqdm(test_loader)):
-            imgs = imgs.to(device)
-            masks = masks.to(device)
-            
-            # Forward pass
+        for imgs, masks in tqdm(test_loader):
+            imgs, masks = imgs.to(device), masks.to(device)
             logits = model(imgs)
             preds = torch.argmax(logits, dim=1)
-            
+
             # Update metrics
             iou_metric.update(preds, masks)
             dice_metric.update(preds, masks)
-            
-            # Collect samples for visualization (at least 12)
+
+            # Save visualization samples
             if len(vis_images) < 12:
                 for i in range(imgs.shape[0]):
                     if len(vis_images) >= 12:
@@ -172,40 +152,29 @@ def evaluate(checkpoint_path, args):
                     vis_images.append(imgs[i])
                     vis_gt_masks.append(masks[i])
                     vis_pred_masks.append(preds[i])
-    
-    # Compute final metrics
+
     iou_per_class = iou_metric.compute().cpu().numpy()
     dice_per_class = dice_metric.compute().cpu().numpy()
-    
-    mean_iou = iou_per_class.mean()
-    mean_dice = dice_per_class.mean()
-    
-    # Print results
+    mean_iou, mean_dice = iou_per_class.mean(), dice_per_class.mean()
+
     class_names = ['Pet', 'Background', 'Border'] if args.classes == 'trimap' else ['Background', 'Pet']
-    
+
     print("\n" + "="*60)
     print("Test Set Results:")
     print("="*60)
-    print(f"\nOverall Metrics:")
-    print(f"  Mean IoU:  {mean_iou:.4f}")
-    print(f"  Mean Dice: {mean_dice:.4f}")
-    
-    print(f"\nPer-Class IoU:")
+    print(f"Mean IoU:  {mean_iou:.4f}")
+    print(f"Mean Dice: {mean_dice:.4f}")
+    print("Per-Class IoU:")
     for i, name in enumerate(class_names):
         print(f"  {name:12s}: {iou_per_class[i]:.4f}")
-    
-    print(f"\nPer-Class Dice:")
+    print("Per-Class Dice:")
     for i, name in enumerate(class_names):
         print(f"  {name:12s}: {dice_per_class[i]:.4f}")
     print("="*60 + "\n")
-    
-    # Create visualizations
+
     samples_dir = args.output_dir / 'samples'
     samples_dir.mkdir(parents=True, exist_ok=True)
-    
-    print(f"Creating visualizations with {len(vis_images)} samples...")
-    
-    # Create comparison grid
+
     create_comparison_grid(
         images=vis_images,
         gt_masks=vis_gt_masks,
@@ -214,8 +183,7 @@ def evaluate(checkpoint_path, args):
         denorm=True,
         save_path=samples_dir / 'test_comparison_grid.png'
     )
-    
-    # Save individual samples
+
     for i in range(len(vis_images)):
         save_single_prediction(
             image=vis_images[i],
@@ -225,9 +193,9 @@ def evaluate(checkpoint_path, args):
             mode=args.classes,
             denorm=True
         )
-    
+
     print(f"Visualizations saved to {samples_dir}")
-    
+
     return {
         'mean_iou': mean_iou,
         'mean_dice': mean_dice,
@@ -238,77 +206,54 @@ def evaluate(checkpoint_path, args):
 
 def main():
     parser = argparse.ArgumentParser(description='Train UNet++ on Oxford-IIIT Pet')
-    
+
     # Data
-    parser.add_argument('--data_root', type=str, default='~/data/oxford-iiit-pet',
-                        help='Path to Oxford-IIIT Pet dataset')
-    parser.add_argument('--classes', type=str, default='trimap', choices=['trimap', 'binary'],
-                        help='Classification mode')
-    parser.add_argument('--img_size', type=int, default=512,
-                        help='Input image size')
-    
+    parser.add_argument('--data_root', type=str, default='~/data/oxford-iiit-pet')
+    parser.add_argument('--classes', type=str, default='trimap', choices=['trimap', 'binary'])
+    parser.add_argument('--img_size', type=int, default=512)
+
     # Model
     parser.add_argument('--encoder', type=str, default='resnet34',
-                        choices=['resnet18', 'resnet34', 'resnet50', 'efficientnet-b0', 
-                                 'efficientnet-b3', 'mobilenet_v2'],
-                        help='Encoder backbone')
-    
-    # Training
-    parser.add_argument('--batch_size', type=int, default=8,
-                        help='Batch size')
-    parser.add_argument('--epochs', type=int, default=50,
-                        help='Number of epochs')
-    parser.add_argument('--lr', type=float, default=1e-3,
-                        help='Learning rate')
-    parser.add_argument('--weight_decay', type=float, default=1e-4,
-                        help='Weight decay')
-    parser.add_argument('--num_workers', type=int, default=4,
-                        help='Number of data loading workers')
-    parser.add_argument('--precision', type=str, default='16-mixed',
-                        choices=['32', '16-mixed', 'bf16-mixed'],
-                        help='Training precision (AMP)')
-    
-    # Logging
-    parser.add_argument('--output_dir', type=str, default='outputs',
-                        help='Output directory')
-    parser.add_argument('--exp_name', type=str, default='baseline',
-                        help='Experiment name')
-    parser.add_argument('--use_wandb', action='store_true',
-                        help='Use Weights & Biases logging')
-    parser.add_argument('--wandb_project', type=str, default='oxpet-segmentation',
-                        help='W&B project name')
-    
-    # Mode
-    parser.add_argument('--mode', type=str, default='train', choices=['train', 'eval', 'both'],
-                        help='Run mode: train only, eval only, or both')
-    parser.add_argument('--checkpoint', type=str, default=None,
-                        help='Checkpoint path for evaluation (if mode=eval)')
+                        choices=['resnet18','resnet34','resnet50','efficientnet-b0','efficientnet-b3','mobilenet_v2'])
 
-    # NEW options
-    parser.add_argument('--use_dice_loss', action='store_true',
-                        help='Use Dice+CE combo loss instead of just CE')
-    parser.add_argument('--use_augmentation', action='store_true',
-                        help='Use data augmentation for training')
-    
+    # Training
+    parser.add_argument('--batch_size', type=int, default=8)
+    parser.add_argument('--epochs', type=int, default=50)
+    parser.add_argument('--lr', type=float, default=1e-3)
+    parser.add_argument('--weight_decay', type=float, default=1e-4)
+    parser.add_argument('--num_workers', type=int, default=4)
+    parser.add_argument('--precision', type=str, default='16-mixed', choices=['32','16-mixed','bf16-mixed'])
+
+    # Logging
+    parser.add_argument('--output_dir', type=str, default='outputs')
+    parser.add_argument('--exp_name', type=str, default='baseline')
+    parser.add_argument('--use_wandb', action='store_true')
+    parser.add_argument('--wandb_project', type=str, default='oxpet-segmentation')
+
+    # Mode
+    parser.add_argument('--mode', type=str, default='train', choices=['train','eval','both'])
+    parser.add_argument('--checkpoint', type=str, default=None)
+
+    # New options
+    parser.add_argument('--use_dice_loss', action='store_true')
+    parser.add_argument('--use_augmentation', action='store_true')
+
     args = parser.parse_args()
-    
-    # Convert paths
+
+    # Paths
     args.data_root = Path(args.data_root).expanduser()
     args.output_dir = Path(args.output_dir)
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    
-    # Run based on mode
+
+    # Run
     if args.mode == 'train':
         best_ckpt = train(args)
-        print(f"\nTo evaluate this model, run:")
-        print(f"python src/train.py --mode eval --checkpoint {best_ckpt}")
-        
+        print(f"\nTo evaluate: python src/train.py --mode eval --checkpoint {best_ckpt}")
     elif args.mode == 'eval':
         if args.checkpoint is None:
-            print("Error: --checkpoint required for evaluation mode")
+            print("Error: --checkpoint required")
             return
         evaluate(args.checkpoint, args)
-        
     elif args.mode == 'both':
         best_ckpt = train(args)
         evaluate(best_ckpt, args)
