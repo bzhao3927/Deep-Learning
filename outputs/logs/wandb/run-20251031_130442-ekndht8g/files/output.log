@@ -24,8 +24,8 @@ LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
 592.242   Total estimated model params size (MB)
 238       Modules in train mode
 0         Modules in eval mode
-Epoch 51:  20%|██        | 149/736 [00:45<02:58,  3.30it/s, v_num=ht8g, train_loss_step=0.201, val_loss=0.237, val_mIoU=0.782, val_Dice=0.868, train_loss_epoch=0.228, train_mIoU=0.810]
-                                                                          
+Epoch 53: 100%|██████████| 736/736 [04:02<00:00,  3.04it/s, v_num=ht8g, train_loss_step=0.233, val_loss=0.229, val_mIoU=0.792, val_Dice=0.874, train_loss_epoch=0.223, train_mIoU=0.817]
+Validation DataLoader 0:  17%|█▋        | 31/184 [00:03<00:16,  9.55it/s] 
 Metric val_loss improved. New best score: 0.461
 Metric val_loss improved by 0.045 >= min_delta = 0.0. New best score: 0.415
 Metric val_loss improved by 0.028 >= min_delta = 0.0. New best score: 0.387
@@ -54,3 +54,6 @@ Metric val_loss improved by 0.004 >= min_delta = 0.0. New best score: 0.239
 Metric val_loss improved by 0.003 >= min_delta = 0.0. New best score: 0.236
 Metric val_loss improved by 0.002 >= min_delta = 0.0. New best score: 0.233
 Metric val_loss improved by 0.001 >= min_delta = 0.0. New best score: 0.233
+Metric val_loss improved by 0.002 >= min_delta = 0.0. New best score: 0.231
+Metric val_loss improved by 0.001 >= min_delta = 0.0. New best score: 0.229
+Metric val_loss improved by 0.000 >= min_delta = 0.0. New best score: 0.229
