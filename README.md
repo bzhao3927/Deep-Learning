@@ -1,4 +1,4 @@
-# UNet++ Semantic Segmentation on Oxford-IIIT Pet Dataset
+# UNet++ with Data Augmentation and Hybrid Loss for Pet Segmentation
 
 Deep learning project implementing UNet++ with hybrid loss function and data augmentation for semantic segmentation.
 
@@ -236,7 +236,7 @@ python plot.py  # Creates outputs/miou_curves.png and outputs/loss_curves.png
 ```bibtex
 @misc{zhao2025unetpp,
   author = {Zhao, Benjamin and Boiney, Cade and Lam, Ken and Trajanov, Ognian},
-  title = {UNet++ with Hybrid Loss and Data Augmentation for Pet Segmentation},
+  title = {UNet++ with Data Augmentation and Hybrid Loss for Pet Segmentation},
   year = {2025},
   publisher = {GitHub},
   url = {https://github.com/bzhao3927/Deep-Learning/tree/main/Assignment2}
