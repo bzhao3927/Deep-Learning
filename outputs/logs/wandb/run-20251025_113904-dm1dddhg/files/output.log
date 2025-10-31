@@ -1,0 +1,38 @@
+IMPROVEMENT 1: Using HEAVY augmentation
+Train samples: 2944
+Val samples: 736
+Test samples: 3669
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/callbacks/model_checkpoint.py:751: Checkpoint directory /home/bzhao/Deep-Learning/Assignment2/outputs/checkpoints exists and is not empty.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:231: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name              | Type                   | Params | Mode
+---------------------------------------------------------------------
+0 | model             | UNetPlusPlus           | 9.2 M  | train
+1 | criterion         | CrossEntropyLoss       | 0      | train
+2 | train_iou         | MulticlassJaccardIndex | 0      | train
+3 | val_iou           | MulticlassJaccardIndex | 0      | train
+4 | val_dice          | MulticlassF1Score      | 0      | train
+5 | val_iou_per_class | MulticlassJaccardIndex | 0      | train
+---------------------------------------------------------------------
+9.2 M     Trainable params
+0         Non-trainable params
+9.2 M     Total params
+36.640    Total estimated model params size (MB)
+134       Modules in train mode
+0         Modules in eval mode
+Epoch 18:  81%|████████  | 596/736 [03:13<00:45,  3.08it/s, v_num=ddhg, train_loss_step=0.350, val_loss=0.375, val_mIoU=0.653, val_Dice=0.774, train_loss_epoch=0.388, train_mIoU=0.649]
+                                                                          
+Metric val_loss improved. New best score: 0.800
+Metric val_loss improved by 0.082 >= min_delta = 0.0. New best score: 0.718
+Metric val_loss improved by 0.080 >= min_delta = 0.0. New best score: 0.638
+Metric val_loss improved by 0.047 >= min_delta = 0.0. New best score: 0.591
+Metric val_loss improved by 0.037 >= min_delta = 0.0. New best score: 0.555
+Metric val_loss improved by 0.054 >= min_delta = 0.0. New best score: 0.501
+Metric val_loss improved by 0.043 >= min_delta = 0.0. New best score: 0.457
+Metric val_loss improved by 0.028 >= min_delta = 0.0. New best score: 0.429
+Metric val_loss improved by 0.007 >= min_delta = 0.0. New best score: 0.422
+Metric val_loss improved by 0.015 >= min_delta = 0.0. New best score: 0.407
+Metric val_loss improved by 0.025 >= min_delta = 0.0. New best score: 0.383
+Metric val_loss improved by 0.015 >= min_delta = 0.0. New best score: 0.368
+Metric val_loss improved by 0.000 >= min_delta = 0.0. New best score: 0.368

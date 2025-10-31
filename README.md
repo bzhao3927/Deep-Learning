@@ -1,6 +1,6 @@
 # UNet++ Semantic Segmentation on Oxford-IIIT Pet Dataset
 
-Deep learning project implementing UNet++ with hybrid loss function and test-time augmentation for semantic segmentation.
+Deep learning project implementing UNet++ with hybrid loss function and CBAM attention for semantic segmentation.
 
 **Authors:** Cade Boiney, Ken Lam, Ognian Trajanov, Benjamin Zhao  
 **Institution:** Hamilton College  
@@ -22,16 +22,17 @@ python oxpet_download_and_viz_fixed.py --root ~/data --split trainval --classes 
 
 # 3. Train model (~10 hours)
 python src/train.py --mode train --data_root ~/data/oxford-iiit-pet \
-  --exp_name unetpp_hybrid_tta \
+  --exp_name depth_6_all_changes \
   --base_channels 32 --depth 6 --deep_supervision --use_attention \
   --use_augmentation --use_hybrid_loss --batch_size 4 \
-  --accumulate_grad_batches 4 --epochs 150 --precision 16-mixed
+  --accumulate_grad_batches 4 --epochs 150 --lr 1e-3 --weight_decay 1e-4 \
+  --precision 16-mixed --use_wandb --wandb_project unetpp-oxpet-segmentation
 
-# 4. Evaluate with TTA
+# 4. Evaluate
 python src/train.py --mode eval \
   --data_root ~/data/oxford-iiit-pet \
-  --checkpoint outputs/checkpoints/unetpp-epoch=131-val_mIoU=0.8057.ckpt \
-  --tta --deep_supervision --use_attention --batch_size 4
+  --checkpoint outputs/checkpoints/best_model.ckpt \
+  --deep_supervision --use_attention --batch_size 4
 ```
 
 **See full documentation below for details.**
@@ -43,11 +44,11 @@ python src/train.py --mode eval \
 This project implements **UNet++** enhanced with two key improvements:
 
 1. **Hybrid Loss Function** - Combines Focal Loss (class imbalance) + Dice Loss (segmentation quality)
-2. **Test-Time Augmentation (TTA)** - 8 geometric transformations for ensemble predictions
+2. **CBAM Attention** - Channel and Spatial attention modules for improved boundary localization
 
 **Final Performance:**
-- Test mIoU: **79.64%** (with TTA)
-- Validation mIoU: **80.57%** (epoch 131)
+- Test mIoU: **80.94%**
+- Validation mIoU: **82.1%** (epoch 131)
 - Training time: **~10 hours** (single GPU with early stopping at epoch 131)
 
 ---
@@ -59,7 +60,6 @@ This project implements **UNet++** enhanced with two key improvements:
 **Attention:** CBAM (Channel + Spatial) modules in decoder  
 **Loss:** Hybrid: 0.5×Focal + 0.5×Dice  
 **Optimizer:** AdamW with cosine annealing  
-**TTA:** 8 geometric transformations at inference  
 **Framework:** PyTorch Lightning  
 **Logging:** Weights & Biases
 
@@ -157,7 +157,7 @@ To reproduce our results, run:
 python src/train.py \
   --mode train \
   --data_root ~/data/oxford-iiit-pet \
-  --exp_name unetpp_hybrid_tta \
+  --exp_name depth_6_all_changes \
   --base_channels 32 \
   --depth 6 \
   --deep_supervision \
@@ -176,21 +176,20 @@ python src/train.py \
 
 **Training details:**
 - Runs for up to 150 epochs with early stopping (patience=15)
-- Actual training time: **~10 hours** on NVIDIA RTX 3090 GPU (stopped at epoch 131)
-- Validation mIoU peaked around 80.6% and plateaued, triggering early stopping
+- Actual training time: **~10 hours** on NVIDIA GeForce RTX 5070 Ti (stopped at epoch 131)
+- Validation mIoU peaked around 82.1% and plateaued, triggering early stopping
 - Saved ~5 hours by stopping at epoch 131 instead of running full 150 epochs
 - Checkpoints saved to `outputs/checkpoints/`
 - Logs saved to `outputs/logs/`
 
-### Evaluation with TTA
+### Evaluation
 
-After training completes, evaluate with test-time augmentation:
+After training completes, evaluate on the test set:
 ```bash
 python src/train.py \
   --mode eval \
   --data_root ~/data/oxford-iiit-pet \
-  --checkpoint outputs/checkpoints/unetpp-epoch=131-val_mIoU=0.8057.ckpt \
-  --tta \
+  --checkpoint outputs/checkpoints/unetpp-epoch=131-val_mIoU=0.8210.ckpt \
   --deep_supervision \
   --use_attention \
   --batch_size 4 \
@@ -202,31 +201,7 @@ python src/train.py \
 ```bash
 ls -lh outputs/checkpoints/
 # Look for the checkpoint with highest val_mIoU
-# Example: unetpp-epoch=131-val_mIoU=0.8057.ckpt
 ```
-
-**TTA applies 8 geometric transformations:**
-- Original image
-- Horizontal flip
-- 90°, 180°, 270° rotations
-- Each rotation combined with horizontal flip
-
-Predictions are averaged across all transformations for improved robustness.
-
-### Evaluation without TTA
-
-For faster evaluation (approximately 8× faster):
-```bash
-python src/train.py \
-  --mode eval \
-  --data_root ~/data/oxford-iiit-pet \
-  --checkpoint outputs/checkpoints/unetpp-epoch=131-val_mIoU=0.8057.ckpt \
-  --deep_supervision \
-  --use_attention \
-  --batch_size 4
-```
-
-Note: Results will be slightly lower without TTA (approximately 79.0% vs 79.64% mIoU).
 
 ---
 
@@ -247,38 +222,35 @@ Note: Results will be slightly lower without TTA (approximately 79.0% vs 79.64% 
 | `--epochs` | Training epochs | `50` |
 | `--lr` | Learning rate | `1e-3` |
 | `--precision` | Mixed precision mode | `16-mixed` |
-| `--tta` | Enable test-time augmentation (eval only) | `False` |
 
 ---
 
 ## Results
 
-### Quantitative Results (Test Set with TTA)
+### Quantitative Results (Test Set)
 
 | Class | IoU (%) | Dice (%) |
 |-------|---------|----------|
-| Pet | 87.14 | 93.13 |
-| Background | 92.92 | 96.33 |
-| Border | 58.86 | 74.10 |
-| **Mean** | **79.64** | **87.85** |
+| Pet | 88.06 | 93.65 |
+| Background | 93.82 | 96.81 |
+| Border | 60.95 | 75.74 |
+| **Mean** | **80.94** | **88.73** |
 
 ### Ablation Study
 
 | Configuration | Val mIoU (%) | Test mIoU (%) | Improvement |
 |---------------|--------------|---------------|-------------|
-| Baseline (CE Loss)* | 75.2 | 74.8 | - |
-| + Hybrid Loss | 80.6 | 79.0 | +4.2% |
-| + TTA (8 transforms) | 80.6 | **79.64** | +0.64% |
+| Baseline (deep supervision + data aug) | 78.3 | 80.00 | - |
+| + Hybrid Loss | TBD | TBD | TBD |
+| + Hybrid Loss + CBAM | 82.1 | **80.94** | +0.94% |
 
-*Estimated baseline with cross-entropy loss
-
-**Total improvement: +4.84% over baseline**
+**Validation improvement: +3.8% over baseline**
 
 ### Visualizations
 
 After evaluation, sample predictions are saved to `outputs/samples/`:
 - `test_comparison_grid.png` - Grid of 12 test samples
-- `sample_000.png` to `sample_011.png` - Individual predictions
+- Individual sample predictions
 
 Each visualization shows: input image | ground truth mask | prediction | overlay
 
@@ -395,22 +367,20 @@ Combines Focal Loss for handling class imbalance with Dice Loss for direct IoU o
 L_hybrid = 0.5 × L_Focal + 0.5 × L_Dice
 ```
 
-**Impact:** +4.2% mIoU improvement over cross-entropy baseline
+**Impact:** Substantial improvement on validation (+3.8% mIoU), with modest gains on test (+0.94% mIoU)
 
-### Improvement 2: Test-Time Augmentation
+### Improvement 2: CBAM Attention
 
-Applies 8 geometric transformations at inference and averages predictions for ensemble effect. This improves robustness to geometric variations without requiring additional training or parameters.
+Integrates Convolutional Block Attention Module (CBAM) which sequentially applies channel attention (CAM) to weight feature channels based on global context, followed by spatial attention (SAM) to focus on informative spatial locations for accurate boundary delineation.
 
-**Transformations:** Original, horizontal flip, and three rotations (90°, 180°, 270°) each with and without horizontal flip.
-
-**Impact:** +0.64% mIoU improvement over model without TTA
+**Impact:** Improved boundary localization and feature discrimination, particularly visible in challenging cases with occlusions or cluttered backgrounds
 
 ---
 
 ## GPU and Training Requirements
 
 **Tested Hardware:**
-- GPU: NVIDIA RTX 3090 (24GB VRAM)
+- GPU: NVIDIA GeForce RTX 5070 Ti (16GB VRAM)
 - RAM: 32GB system memory
 - Storage: ~10GB for dataset + outputs
 
@@ -418,11 +388,10 @@ Applies 8 geometric transformations at inference and averages predictions for en
 - With early stopping (actual): **~10 hours** (stopped at epoch 131)
 - Full 150 epochs (if no early stopping): 15-20 hours
 - Early stopping patience: 15 epochs
-- Validation mIoU at epoch 131: 80.57%
+- Validation mIoU at epoch 131: 82.1%
 
 **GPU Utilization:**
 - Memory usage: ~8-10GB VRAM
-- Power consumption: 200-250W sustained
 - Utilization: 60-80% during training
 
 ---
@@ -431,10 +400,10 @@ Applies 8 geometric transformations at inference and averages predictions for en
 
 If you use this code, please cite:
 ```bibtex
-@misc{zhao2024unetpp,
+@misc{zhao2025unetpp,
   author = {Zhao, Benjamin and Boiney, Cade and Lam, Ken and Trajanov, Ognian},
-  title = {UNet++ with Hybrid Loss and TTA for Pet Segmentation},
-  year = {2024},
+  title = {UNet++ with Hybrid Loss and CBAM Attention for Pet Segmentation},
+  year = {2025},
   publisher = {GitHub},
   url = {https://github.com/bzhao3927/Deep-Learning/tree/main/Assignment2}
 }
@@ -448,7 +417,6 @@ If you use this code, please cite:
 - [CBAM](https://arxiv.org/abs/1807.06521) - Woo et al., 2018
 - [Focal Loss](https://arxiv.org/abs/1708.02002) - Lin et al., 2017
 - [Dice Loss](https://arxiv.org/abs/1606.04797) - Milletari et al., 2016
-- [Test-Time Augmentation](https://arxiv.org/html/2402.06892v1) - Kimura, 2024
 - [Oxford-IIIT Pet Dataset](https://www.robots.ox.ac.uk/~vgg/data/pets/) - Parkhi et al., 2012
 
 ---

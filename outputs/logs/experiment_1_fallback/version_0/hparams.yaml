@@ -1,0 +1,9 @@
+base_channels: 32
+deep_supervision: true
+depth: 5
+in_channels: 3
+lr: 0.001
+max_epochs: 120
+num_classes: 3
+use_dice_loss: true
+weight_decay: 0.0001

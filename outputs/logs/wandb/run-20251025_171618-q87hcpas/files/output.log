@@ -1,0 +1,84 @@
+Using BASELINE transforms
+Train samples: 2944
+Val samples: 736
+Test samples: 3669
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/callbacks/model_checkpoint.py:751: Checkpoint directory /home/bzhao/Deep-Learning/Assignment2/outputs/checkpoints exists and is not empty.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:231: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name              | Type                   | Params | Mode
+---------------------------------------------------------------------
+0 | model             | UNetPlusPlus           | 9.2 M  | train
+1 | criterion         | HybridLoss             | 0      | train
+2 | train_iou         | MulticlassJaccardIndex | 0      | train
+3 | val_iou           | MulticlassJaccardIndex | 0      | train
+4 | val_dice          | MulticlassF1Score      | 0      | train
+5 | val_iou_per_class | MulticlassJaccardIndex | 0      | train
+---------------------------------------------------------------------
+9.2 M     Trainable params
+0         Non-trainable params
+9.2 M     Total params
+36.640    Total estimated model params size (MB)
+136       Modules in train mode
+0         Modules in eval mode
+Epoch 35: 100%|██████████| 736/736 [02:05<00:00,  5.86it/s, v_num=cpas, train_loss_step=0.0902, val_loss=0.302, val_mIoU=0.723, val_Dice=0.828, train_loss_epoch=0.0945, train_mIoU=0.852]
+                                                                          
+Metric val_loss improved. New best score: 0.514
+Metric val_loss improved by 0.091 >= min_delta = 0.0. New best score: 0.423
+Metric val_loss improved by 0.053 >= min_delta = 0.0. New best score: 0.370
+Metric val_loss improved by 0.049 >= min_delta = 0.0. New best score: 0.321
+Metric val_loss improved by 0.030 >= min_delta = 0.0. New best score: 0.291
+Metric val_loss improved by 0.000 >= min_delta = 0.0. New best score: 0.291
+Metric val_loss improved by 0.006 >= min_delta = 0.0. New best score: 0.285
+Metric val_loss improved by 0.027 >= min_delta = 0.0. New best score: 0.258
+Metric val_loss improved by 0.009 >= min_delta = 0.0. New best score: 0.249
+Metric val_loss improved by 0.000 >= min_delta = 0.0. New best score: 0.249
+Metric val_loss improved by 0.009 >= min_delta = 0.0. New best score: 0.239
+Metric val_loss improved by 0.002 >= min_delta = 0.0. New best score: 0.238
+Metric val_loss improved by 0.003 >= min_delta = 0.0. New best score: 0.235
+Metric val_loss improved by 0.010 >= min_delta = 0.0. New best score: 0.225
+Metric val_loss improved by 0.001 >= min_delta = 0.0. New best score: 0.224
+Monitored metric val_loss did not improve in the last 15 records. Best score: 0.224. Signaling Trainer to stop.
+Training complete!
+Best checkpoint: /home/bzhao/Deep-Learning/Assignment2/outputs/checkpoints/unetpp-epoch=34-val_mIoU=0.7312.ckpt
+Best val_mIoU: 0.7312
+
+============================================================
+Starting evaluation on test set...
+============================================================
+Using BASELINE transforms
+Train samples: 2944
+Val samples: 736
+Test samples: 3669
+IMPROVEMENT 2: Using Hybrid Loss (0.5*Focal + 0.5*Dice)
+100%|██████████| 918/918 [01:23<00:00, 10.98it/s]
+
+============================================================
+Test Set Results:
+============================================================
+Mean IoU:  0.7404
+Mean Dice: 0.8415
+Per-Class IoU:
+  Pet         : 0.8001
+  Background  : 0.8904
+  Border      : 0.5309
+Per-Class Dice:
+  Pet         : 0.8889
+  Background  : 0.9420
+  Border      : 0.6936
+============================================================
+
+Saved visualization to outputs/samples/test_comparison_grid.png
+Saved visualization to outputs/samples/sample_000.png
+Saved visualization to outputs/samples/sample_001.png
+Saved visualization to outputs/samples/sample_002.png
+Saved visualization to outputs/samples/sample_003.png
+Saved visualization to outputs/samples/sample_004.png
+Saved visualization to outputs/samples/sample_005.png
+Saved visualization to outputs/samples/sample_006.png
+Saved visualization to outputs/samples/sample_007.png
+Saved visualization to outputs/samples/sample_008.png
+Saved visualization to outputs/samples/sample_009.png
+Saved visualization to outputs/samples/sample_010.png
+Saved visualization to outputs/samples/sample_011.png
+Visualizations saved to outputs/samples

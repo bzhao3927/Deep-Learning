@@ -1,0 +1,103 @@
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/albumentations/core/validation.py:114: UserWarning: ShiftScaleRotate is a special case of Affine transform. Please use Affine transform instead.
+  original_init(self, **validated_kwargs)
+/home/bzhao/Deep-Learning/Assignment2/src/datamodule_oxpet.py:51: UserWarning: Argument(s) 'value, mask_value' are not valid for transform ShiftScaleRotate
+  A.ShiftScaleRotate(
+/home/bzhao/Deep-Learning/Assignment2/src/datamodule_oxpet.py:72: UserWarning: Argument(s) 'var_limit' are not valid for transform GaussNoise
+  A.GaussNoise(var_limit=(10, 50), p=1.0),
+/home/bzhao/Deep-Learning/Assignment2/src/datamodule_oxpet.py:78: UserWarning: Argument(s) 'max_holes, max_height, max_width, min_holes, min_height, min_width, fill_value, mask_fill_value' are not valid for transform CoarseDropout
+  A.CoarseDropout(
+IMPROVEMENT 1: Using HEAVY augmentation
+Train samples: 2944
+Val samples: 736
+Test samples: 3669
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/callbacks/model_checkpoint.py:751: Checkpoint directory /home/bzhao/Deep-Learning/Assignment2/outputs/checkpoints exists and is not empty.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:231: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name              | Type                   | Params | Mode
+---------------------------------------------------------------------
+0 | model             | UNetPlusPlus           | 9.2 M  | train
+1 | criterion         | CrossEntropyLoss       | 0      | train
+2 | train_iou         | MulticlassJaccardIndex | 0      | train
+3 | val_iou           | MulticlassJaccardIndex | 0      | train
+4 | val_dice          | MulticlassF1Score      | 0      | train
+5 | val_iou_per_class | MulticlassJaccardIndex | 0      | train
+---------------------------------------------------------------------
+9.2 M     Trainable params
+0         Non-trainable params
+9.2 M     Total params
+36.640    Total estimated model params size (MB)
+134       Modules in train mode
+0         Modules in eval mode
+Epoch 0:   0%|          | 0/368 [00:00<?, ?it/s]                           
+Traceback (most recent call last):
+  File "/home/bzhao/Deep-Learning/Assignment2/src/train.py", line 273, in <module>
+    main()
+  File "/home/bzhao/Deep-Learning/Assignment2/src/train.py", line 268, in main
+    best_ckpt = train(args)
+                ^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/src/train.py", line 93, in train
+    trainer.fit(model, dm)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+    call._call_and_handle_interrupt(
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+    self.fit_loop.run()
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+    self.advance()
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+    self.epoch_loop.run(self._data_fetcher)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+    self.advance(data_fetcher)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 310, in advance
+    batch, _, __ = next(data_fetcher)
+                   ^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fetchers.py", line 134, in __next__
+    batch = super().__next__()
+            ^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fetchers.py", line 61, in __next__
+    batch = next(self.iterator)
+            ^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/combined_loader.py", line 341, in __next__
+    out = next(self._iterator)
+          ^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/combined_loader.py", line 78, in __next__
+    out[i] = next(self.iterators[i])
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 732, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1506, in _next_data
+    return self._process_data(data, worker_id)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/utils/data/dataloader.py", line 1541, in _process_data
+    data.reraise()
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/_utils.py", line 769, in reraise
+    raise exception
+RuntimeError: Caught RuntimeError in DataLoader worker process 0.
+Original Traceback (most recent call last):
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/utils/data/_utils/worker.py", line 349, in _worker_loop
+    data = fetcher.fetch(index)  # type: ignore[possibly-undefined]
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/utils/data/_utils/fetch.py", line 55, in fetch
+    return self.collate_fn(data)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/utils/data/_utils/collate.py", line 398, in default_collate
+    return collate(batch, collate_fn_map=default_collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/utils/data/_utils/collate.py", line 212, in collate
+    collate(samples, collate_fn_map=collate_fn_map)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/utils/data/_utils/collate.py", line 155, in collate
+    return collate_fn_map[elem_type](batch, collate_fn_map=collate_fn_map)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/utils/data/_utils/collate.py", line 271, in collate_tensor_fn
+    out = elem.new(storage).resize_(len(batch), *list(elem.size()))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Trying to resize storage that is not resizable

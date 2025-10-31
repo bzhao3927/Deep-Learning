@@ -1,0 +1,84 @@
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/albumentations/core/validation.py:114: UserWarning: ShiftScaleRotate is a special case of Affine transform. Please use Affine transform instead.
+  original_init(self, **validated_kwargs)
+/home/bzhao/Deep-Learning/Assignment2/src/datamodule_oxpet.py:68: UserWarning: Argument(s) 'var_limit' are not valid for transform GaussNoise
+  A.GaussNoise(var_limit=(5.0, 20.0), p=1.0),
+IMPROVEMENT 1: Using augmentation transforms
+Train samples: 2944
+Val samples: 736
+Test samples: 3669
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/callbacks/model_checkpoint.py:751: Checkpoint directory /home/bzhao/Deep-Learning/Assignment2/outputs/checkpoints exists and is not empty.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:231: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name      | Type                   | Params | Mode
+-------------------------------------------------------------
+0 | model     | UNetPlusPlus           | 148 M  | train
+1 | criterion | HybridLoss             | 0      | train
+2 | train_iou | MulticlassJaccardIndex | 0      | train
+3 | val_iou   | MulticlassJaccardIndex | 0      | train
+4 | val_dice  | MulticlassF1Score      | 0      | train
+-------------------------------------------------------------
+148 M     Trainable params
+0         Non-trainable params
+148 M     Total params
+592.240   Total estimated model params size (MB)
+233       Modules in train mode
+0         Modules in eval mode
+Epoch 0:  48%|████▊     | 350/736 [01:47<01:58,  3.27it/s, v_num=cyzx, train_loss_step=0.489]
+[rank: 0] Received SIGTERM: 15
+Traceback (most recent call last):
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+    self.fit_loop.run()
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+    self.advance()
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+    self.epoch_loop.run(self._data_fetcher)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 153, in run
+    self.on_advance_end(data_fetcher)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 414, in on_advance_end
+    raise SIGTERMException
+pytorch_lightning.utilities.exceptions.SIGTERMException
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/bzhao/Deep-Learning/Assignment2/src/train.py", line 353, in <module>
+    main()
+  File "/home/bzhao/Deep-Learning/Assignment2/src/train.py", line 339, in main
+    best_ckpt = train(args)
+                ^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/src/train.py", line 106, in train
+    trainer.fit(model, dm)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+    call._call_and_handle_interrupt(
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/call.py", line 70, in _call_and_handle_interrupt
+    trainer._teardown()
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 1034, in _teardown
+    self.strategy.teardown()
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/strategies/strategy.py", line 532, in teardown
+    _optimizers_to_device(self.optimizers, torch.device("cpu"))
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/lightning_fabric/utilities/optimizer.py", line 27, in _optimizers_to_device
+    _optimizer_to_device(opt, device)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/lightning_fabric/utilities/optimizer.py", line 41, in _optimizer_to_device
+    v[key] = move_data_to_device(val, device)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/lightning_fabric/utilities/apply_func.py", line 110, in move_data_to_device
+    return apply_to_collection(batch, dtype=_TransferableDataType, function=batch_to)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/lightning_utilities/core/apply_func.py", line 66, in apply_to_collection
+    return function(data, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/lightning_fabric/utilities/apply_func.py", line 104, in batch_to
+    data_output = data.to(device, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/utils/data/_utils/signal_handling.py", line 73, in handler
+    _error_if_any_worker_fails()
+RuntimeError: DataLoader worker (pid 666077) is killed by signal: Terminated.

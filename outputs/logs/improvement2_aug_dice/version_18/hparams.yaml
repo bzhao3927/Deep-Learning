@@ -1,6 +1,0 @@
-classes: 3
-encoder_name: resnet34
-lr: 0.001
-max_epochs: 50
-use_dice_loss: true
-weight_decay: 0.0001

@@ -1,0 +1,22 @@
+2025-10-25 10:49:16,228 INFO    MainThread:262631 [wandb_setup.py:_flush():81] Current SDK version is 0.22.2
+2025-10-25 10:49:16,228 INFO    MainThread:262631 [wandb_setup.py:_flush():81] Configure stats pid to 262631
+2025-10-25 10:49:16,228 INFO    MainThread:262631 [wandb_setup.py:_flush():81] Loading settings from /home/bzhao/.config/wandb/settings
+2025-10-25 10:49:16,228 INFO    MainThread:262631 [wandb_setup.py:_flush():81] Loading settings from /home/bzhao/Deep-Learning/Assignment2/wandb/settings
+2025-10-25 10:49:16,228 INFO    MainThread:262631 [wandb_setup.py:_flush():81] Loading settings from environment variables
+2025-10-25 10:49:16,228 INFO    MainThread:262631 [wandb_init.py:setup_run_log_directory():705] Logging user logs to outputs/logs/wandb/run-20251025_104916-k2a8vsnh/logs/debug.log
+2025-10-25 10:49:16,228 INFO    MainThread:262631 [wandb_init.py:setup_run_log_directory():706] Logging internal logs to outputs/logs/wandb/run-20251025_104916-k2a8vsnh/logs/debug-internal.log
+2025-10-25 10:49:16,228 INFO    MainThread:262631 [wandb_init.py:init():832] calling init triggers
+2025-10-25 10:49:16,228 INFO    MainThread:262631 [wandb_init.py:init():837] wandb.init called with sweep_config: {}
+config: {'_wandb': {}}
+2025-10-25 10:49:16,228 INFO    MainThread:262631 [wandb_init.py:init():880] starting backend
+2025-10-25 10:49:16,433 INFO    MainThread:262631 [wandb_init.py:init():883] sending inform_init request
+2025-10-25 10:49:16,437 INFO    MainThread:262631 [wandb_init.py:init():891] backend started and connected
+2025-10-25 10:49:16,437 INFO    MainThread:262631 [wandb_init.py:init():961] updated telemetry
+2025-10-25 10:49:16,440 INFO    MainThread:262631 [wandb_init.py:init():985] communicating run to backend with 90.0 second timeout
+2025-10-25 10:49:16,911 INFO    MainThread:262631 [wandb_init.py:init():1036] starting run threads in backend
+2025-10-25 10:49:16,956 INFO    MainThread:262631 [wandb_run.py:_console_start():2509] atexit reg
+2025-10-25 10:49:16,956 INFO    MainThread:262631 [wandb_run.py:_redirect():2357] redirect: wrap_raw
+2025-10-25 10:49:16,956 INFO    MainThread:262631 [wandb_run.py:_redirect():2426] Wrapping output streams.
+2025-10-25 10:49:16,956 INFO    MainThread:262631 [wandb_run.py:_redirect():2449] Redirects installed.
+2025-10-25 10:49:16,958 INFO    MainThread:262631 [wandb_init.py:init():1076] run started, returning control to user process
+2025-10-25 10:49:16,977 INFO    MainThread:262631 [wandb_run.py:_config_callback():1392] config_cb None None {'in_channels': 3, 'num_classes': 3, 'base_channels': 32, 'depth': 4, 'deep_supervision': False, 'lr': 0.001, 'weight_decay': 0.0001, 'max_epochs': 50, 'use_dice_loss': True}

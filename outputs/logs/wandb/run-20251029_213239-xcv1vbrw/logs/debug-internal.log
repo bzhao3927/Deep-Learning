@@ -1,0 +1,16 @@
+{"time":"2025-10-29T21:32:39.494444071-04:00","level":"INFO","msg":"stream: starting","core version":"0.22.2"}
+{"time":"2025-10-29T21:32:39.710458983-04:00","level":"INFO","msg":"stream: created new stream","id":"xcv1vbrw"}
+{"time":"2025-10-29T21:32:39.710583382-04:00","level":"INFO","msg":"stream: started","id":"xcv1vbrw"}
+{"time":"2025-10-29T21:32:39.710633444-04:00","level":"INFO","msg":"handler: started","stream_id":"xcv1vbrw"}
+{"time":"2025-10-29T21:32:39.710656085-04:00","level":"INFO","msg":"writer: started","stream_id":"xcv1vbrw"}
+{"time":"2025-10-29T21:32:39.710635818-04:00","level":"INFO","msg":"sender: started","stream_id":"xcv1vbrw"}
+{"time":"2025-10-29T22:48:12.165823547-04:00","level":"INFO","msg":"flowcontrol: backed up, offloading to disk","recordNumber":29844}
+{"time":"2025-10-29T22:48:40.232548404-04:00","level":"INFO","msg":"api: retrying error","error":"Post \"https://api.wandb.ai/graphql\": net/http: request canceled (Client.Timeout exceeded while awaiting headers)"}
+{"time":"2025-10-29T22:48:42.463232005-04:00","level":"INFO","msg":"flowcontrol: unblocked","totalOffloaded":346}
+{"time":"2025-10-30T00:32:27.54294623-04:00","level":"INFO","msg":"api: retrying HTTP error","status":502,"url":"https://api.wandb.ai/files/bzhao-hamilton-college/unetpp-oxpet-segmentation/xcv1vbrw/file_stream","body":"\n<html><head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n<title>502 Server Error</title>\n</head>\n<body text=#000000 bgcolor=#ffffff>\n<h1>Error: Server Error</h1>\n<h2>The server encountered a temporary error and could not complete your request.<p>Please try again in 30 seconds.</h2>\n<h2></h2>\n</body></html>\n"}
+{"time":"2025-10-30T05:33:15.085904516-04:00","level":"INFO","msg":"api: retrying HTTP error","status":502,"url":"https://api.wandb.ai/files/bzhao-hamilton-college/unetpp-oxpet-segmentation/xcv1vbrw/file_stream","body":"\n<html><head>\n<meta http-equiv=\"content-type\" content=\"text/html;charset=utf-8\">\n<title>502 Server Error</title>\n</head>\n<body text=#000000 bgcolor=#ffffff>\n<h1>Error: Server Error</h1>\n<h2>The server encountered a temporary error and could not complete your request.<p>Please try again in 30 seconds.</h2>\n<h2></h2>\n</body></html>\n"}
+{"time":"2025-10-30T09:25:36.926229124-04:00","level":"INFO","msg":"stream: closing","id":"xcv1vbrw"}
+{"time":"2025-10-30T09:25:37.340314679-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-10-30T09:25:37.495391402-04:00","level":"INFO","msg":"handler: closed","stream_id":"xcv1vbrw"}
+{"time":"2025-10-30T09:25:37.495517664-04:00","level":"INFO","msg":"sender: closed","stream_id":"xcv1vbrw"}
+{"time":"2025-10-30T09:25:37.495525869-04:00","level":"INFO","msg":"stream: closed","id":"xcv1vbrw"}

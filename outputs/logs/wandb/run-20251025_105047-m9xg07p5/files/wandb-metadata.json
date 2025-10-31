@@ -1,0 +1,61 @@
+{
+  "os": "Linux-6.12.10-76061203-generic-x86_64-with-glibc2.35",
+  "python": "CPython 3.12.10",
+  "startedAt": "2025-10-25T14:50:47.338245Z",
+  "args": [
+    "--mode",
+    "both",
+    "--data_root",
+    "/home/bzhao/data/oxford-iiit-pet",
+    "--use_augmentation",
+    "--use_dice_loss",
+    "--batch_size",
+    "8",
+    "--epochs",
+    "50",
+    "--base_channels",
+    "32",
+    "--depth",
+    "4",
+    "--exp_name",
+    "best_model_both_improvements",
+    "--use_wandb",
+    "--wandb_project",
+    "oxpet-segmentation"
+  ],
+  "program": "/home/bzhao/Deep-Learning/Assignment2/src/train.py",
+  "codePath": "src/train.py",
+  "codePathLocal": "src/train.py",
+  "git": {
+    "remote": "https://github.com/bzhao3927/Deep-Learning.git",
+    "commit": "ef2fa871d13e62c3bfacf0b7704c2b66d2e2d423"
+  },
+  "email": "bzhao@hamilton.edu",
+  "root": "outputs/logs",
+  "host": "cs-dept-llm-3",
+  "executable": "/home/bzhao/Deep-Learning/Assignment2/.venv/bin/python",
+  "cpu_count": 6,
+  "cpu_count_logical": 12,
+  "gpu": "NVIDIA GeForce RTX 5070 Ti",
+  "gpu_count": 1,
+  "disk": {
+    "/": {
+      "total": "973837025280",
+      "used": "101938573312"
+    }
+  },
+  "memory": {
+    "total": "32747769856"
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA GeForce RTX 5070 Ti",
+      "memoryTotal": "17094934528",
+      "cudaCores": 8960,
+      "architecture": "Blackwell",
+      "uuid": "GPU-9acc7df5-5214-c539-865c-a5c91e1fda2f"
+    }
+  ],
+  "cudaVersion": "12.8",
+  "writerId": "hvz0wo5emudu0g56wci25fbds3gtnwqy"
+}

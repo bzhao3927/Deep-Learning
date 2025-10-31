@@ -1,0 +1,24 @@
+Using BASELINE transforms
+Train samples: 2944
+Val samples: 736
+Test samples: 3669
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/callbacks/model_checkpoint.py:751: Checkpoint directory /home/bzhao/Deep-Learning/Assignment2/outputs/checkpoints exists and is not empty.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:231: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name              | Type                   | Params | Mode
+---------------------------------------------------------------------
+0 | model             | UNetPlusPlus           | 9.2 M  | train
+1 | criterion         | CrossEntropyLoss       | 0      | train
+2 | train_iou         | MulticlassJaccardIndex | 0      | train
+3 | val_iou           | MulticlassJaccardIndex | 0      | train
+4 | val_dice          | MulticlassF1Score      | 0      | train
+5 | val_iou_per_class | MulticlassJaccardIndex | 0      | train
+---------------------------------------------------------------------
+9.2 M     Trainable params
+0         Non-trainable params
+9.2 M     Total params
+36.640    Total estimated model params size (MB)
+164       Modules in train mode
+0         Modules in eval mode
+Epoch 0:  30%|██▉       | 220/736 [01:12<02:50,  3.03it/s, v_num=e7fo, train_loss_step=0.871]

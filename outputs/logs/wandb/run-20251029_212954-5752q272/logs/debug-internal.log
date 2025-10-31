@@ -1,0 +1,15 @@
+{"time":"2025-10-29T21:29:54.437376248-04:00","level":"INFO","msg":"stream: starting","core version":"0.22.2"}
+{"time":"2025-10-29T21:29:54.639101594-04:00","level":"INFO","msg":"stream: created new stream","id":"5752q272"}
+{"time":"2025-10-29T21:29:54.639213449-04:00","level":"INFO","msg":"stream: started","id":"5752q272"}
+{"time":"2025-10-29T21:29:54.639287115-04:00","level":"INFO","msg":"sender: started","stream_id":"5752q272"}
+{"time":"2025-10-29T21:29:54.639285181-04:00","level":"INFO","msg":"handler: started","stream_id":"5752q272"}
+{"time":"2025-10-29T21:29:54.639336956-04:00","level":"INFO","msg":"writer: started","stream_id":"5752q272"}
+{"time":"2025-10-29T21:31:10.248485416-04:00","level":"ERROR","msg":"HTTP error","status":404,"method":"POST","url":"https://api.wandb.ai/files/bzhao-hamilton-college/unetpp-depth-experiments/5752q272/file_stream"}
+{"time":"2025-10-29T21:31:10.248529186-04:00","level":"ERROR+4","msg":"filestream: fatal error: filestream: failed to upload: 404 Not Found path=files/bzhao-hamilton-college/unetpp-depth-experiments/5752q272/file_stream: {\"error\":\"run unetpp-depth-experiments/5752q272 not found while streaming file\"}"}
+{"time":"2025-10-29T21:32:23.905141149-04:00","level":"INFO","msg":"stream: closing","id":"5752q272"}
+{"time":"2025-10-29T21:32:24.02319916-04:00","level":"ERROR","msg":"HTTP error","status":404,"method":"POST","url":"https://api.wandb.ai/graphql"}
+{"time":"2025-10-29T21:32:24.023342573-04:00","level":"ERROR","msg":"runfiles: CreateRunFiles returned error: returned error 404: {\"data\":{\"createRunFiles\":null},\"errors\":[{\"message\":\"project bzhao-hamilton-college/unetpp-depth-experiments not found during createRunFiles\",\"path\":[\"createRunFiles\"]}]}"}
+{"time":"2025-10-29T21:32:24.027110149-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-10-29T21:32:24.02714845-04:00","level":"INFO","msg":"handler: closed","stream_id":"5752q272"}
+{"time":"2025-10-29T21:32:24.027218859-04:00","level":"INFO","msg":"sender: closed","stream_id":"5752q272"}
+{"time":"2025-10-29T21:32:24.027390565-04:00","level":"INFO","msg":"stream: closed","id":"5752q272"}

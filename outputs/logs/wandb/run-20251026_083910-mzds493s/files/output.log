@@ -1,0 +1,47 @@
+IMPROVEMENT 1: Using augmentation transforms
+Train samples: 2944
+Val samples: 736
+Test samples: 3669
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/callbacks/model_checkpoint.py:751: Checkpoint directory /home/bzhao/Deep-Learning/Assignment2/outputs/checkpoints exists and is not empty.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+Traceback (most recent call last):
+  File "/home/bzhao/Deep-Learning/Assignment2/src/train.py", line 525, in <module>
+    main()
+  File "/home/bzhao/Deep-Learning/Assignment2/src/train.py", line 511, in main
+    best_ckpt = train(args)
+                ^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/src/train.py", line 291, in train
+    trainer.fit(model, dm)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+    call._call_and_handle_interrupt(
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 987, in _run
+    self.strategy.setup(self)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/strategies/strategy.py", line 155, in setup
+    self.model_to_device()
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/strategies/single_device.py", line 79, in model_to_device
+    self.model.to(self.root_device)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/lightning_fabric/utilities/device_dtype_mixin.py", line 55, in to
+    return super().to(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1371, in to
+    return self._apply(convert)
+           ^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 930, in _apply
+    module._apply(fn)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 930, in _apply
+    module._apply(fn)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 930, in _apply
+    module._apply(fn)
+  [Previous line repeated 1 more time]
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 957, in _apply
+    param_applied = fn(param)
+                    ^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/nn/modules/module.py", line 1357, in convert
+    return t.to(
+           ^^^^^
+torch.OutOfMemoryError: CUDA out of memory. Tried to allocate 28.00 MiB. GPU 0 has a total capacity of 15.48 GiB of which 2.62 MiB is free. Process 415243 has 15.13 GiB memory in use. Including non-PyTorch memory, this process has 320.00 MiB memory in use. Of the allocated memory 89.04 MiB is allocated by PyTorch, and 10.96 MiB is reserved by PyTorch but unallocated. If reserved but unallocated memory is large try setting PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True to avoid fragmentation.  See documentation for Memory Management  (https://pytorch.org/docs/stable/notes/cuda.html#environment-variables)

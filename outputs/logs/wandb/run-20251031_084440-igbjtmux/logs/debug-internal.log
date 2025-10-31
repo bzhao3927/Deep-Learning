@@ -1,0 +1,15 @@
+{"time":"2025-10-31T08:44:40.469512207-04:00","level":"INFO","msg":"stream: starting","core version":"0.22.2"}
+{"time":"2025-10-31T08:44:40.659487773-04:00","level":"INFO","msg":"stream: created new stream","id":"igbjtmux"}
+{"time":"2025-10-31T08:44:40.659560617-04:00","level":"INFO","msg":"handler: started","stream_id":"igbjtmux"}
+{"time":"2025-10-31T08:44:40.659659539-04:00","level":"INFO","msg":"stream: started","id":"igbjtmux"}
+{"time":"2025-10-31T08:44:40.659715592-04:00","level":"INFO","msg":"writer: started","stream_id":"igbjtmux"}
+{"time":"2025-10-31T08:44:40.659723526-04:00","level":"INFO","msg":"sender: started","stream_id":"igbjtmux"}
+{"time":"2025-10-31T08:46:26.284262412-04:00","level":"ERROR","msg":"HTTP error","status":404,"method":"POST","url":"https://api.wandb.ai/files/bzhao-hamilton-college/unetpp-oxpet-segmentation/igbjtmux/file_stream"}
+{"time":"2025-10-31T08:46:26.284300021-04:00","level":"ERROR+4","msg":"filestream: fatal error: filestream: failed to upload: 404 Not Found path=files/bzhao-hamilton-college/unetpp-oxpet-segmentation/igbjtmux/file_stream: {\"error\":\"run unetpp-oxpet-segmentation/igbjtmux not found while streaming file\"}"}
+{"time":"2025-10-31T08:47:58.258337702-04:00","level":"INFO","msg":"stream: closing","id":"igbjtmux"}
+{"time":"2025-10-31T08:47:58.359850779-04:00","level":"ERROR","msg":"HTTP error","status":404,"method":"POST","url":"https://api.wandb.ai/graphql"}
+{"time":"2025-10-31T08:47:58.359962825-04:00","level":"ERROR","msg":"runfiles: CreateRunFiles returned error: returned error 404: {\"data\":{\"createRunFiles\":null},\"errors\":[{\"message\":\"run unetpp-oxpet-segmentation/igbjtmux not found during createRunFiles\",\"path\":[\"createRunFiles\"]}]}"}
+{"time":"2025-10-31T08:47:58.360338326-04:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-10-31T08:47:58.360368611-04:00","level":"INFO","msg":"handler: closed","stream_id":"igbjtmux"}
+{"time":"2025-10-31T08:47:58.360451133-04:00","level":"INFO","msg":"sender: closed","stream_id":"igbjtmux"}
+{"time":"2025-10-31T08:47:58.360460019-04:00","level":"INFO","msg":"stream: closed","id":"igbjtmux"}

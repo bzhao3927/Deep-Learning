@@ -1,0 +1,121 @@
+_wandb:
+    value:
+        cli_version: 0.22.2
+        e:
+            pcyq1yez73oqj5y3k7869hnv9pmjv3av:
+                args:
+                    - --mode
+                    - train
+                    - --data_root
+                    - /home/bzhao/data/oxford-iiit-pet
+                    - --exp_name
+                    - full_model_no_aug_no_tta
+                    - --base_channels
+                    - "32"
+                    - --depth
+                    - "6"
+                    - --deep_supervision
+                    - --use_attention
+                    - --use_hybrid_loss
+                    - --batch_size
+                    - "4"
+                    - --accumulate_grad_batches
+                    - "4"
+                    - --epochs
+                    - "150"
+                    - --lr
+                    - "1e-3"
+                    - --weight_decay
+                    - "1e-4"
+                    - --precision
+                    - 16-mixed
+                    - --use_wandb
+                    - --wandb_project
+                    - unetpp-oxpet-segmentation
+                codePath: src/train.py
+                codePathLocal: src/train.py
+                cpu_count: 6
+                cpu_count_logical: 12
+                cudaVersion: "12.8"
+                disk:
+                    /:
+                        total: "973837025280"
+                        used: "274242236416"
+                email: bzhao@hamilton.edu
+                executable: /home/bzhao/Deep-Learning/Assignment2/.venv/bin/python
+                git:
+                    commit: ef2fa871d13e62c3bfacf0b7704c2b66d2e2d423
+                    remote: https://github.com/bzhao3927/Deep-Learning.git
+                gpu: NVIDIA GeForce RTX 5070 Ti
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Blackwell
+                      cudaCores: 8960
+                      memoryTotal: "17094934528"
+                      name: NVIDIA GeForce RTX 5070 Ti
+                      uuid: GPU-9acc7df5-5214-c539-865c-a5c91e1fda2f
+                host: cs-dept-llm-3
+                memory:
+                    total: "32747769856"
+                os: Linux-6.12.10-76061203-generic-x86_64-with-glibc2.35
+                program: /home/bzhao/Deep-Learning/Assignment2/src/train.py
+                python: CPython 3.12.10
+                root: outputs/logs
+                startedAt: "2025-10-31T12:51:07.642537Z"
+                writerId: pcyq1yez73oqj5y3k7869hnv9pmjv3av
+        m:
+            - "1": trainer/global_step
+              "6":
+                - 3
+              "7": []
+            - "2": '*'
+              "5": 1
+              "6":
+                - 1
+              "7": []
+        python_version: 3.12.10
+        t:
+            "1":
+                - 1
+                - 9
+                - 41
+                - 49
+                - 80
+                - 103
+            "2":
+                - 1
+                - 9
+                - 41
+                - 49
+                - 80
+                - 103
+            "3":
+                - 7
+                - 13
+                - 66
+            "4": 3.12.10
+            "5": 0.22.2
+            "12": 0.22.2
+            "13": linux-x86_64
+base_channels:
+    value: 32
+deep_supervision:
+    value: true
+depth:
+    value: 6
+in_channels:
+    value: 3
+lr:
+    value: 0.001
+max_epochs:
+    value: 150
+num_classes:
+    value: 3
+use_attention:
+    value: true
+use_hybrid_loss:
+    value: true
+use_tta:
+    value: false
+weight_decay:
+    value: 0.0001

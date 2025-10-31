@@ -1,0 +1,92 @@
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/albumentations/core/validation.py:114: UserWarning: ShiftScaleRotate is a special case of Affine transform. Please use Affine transform instead.
+  original_init(self, **validated_kwargs)
+/home/bzhao/Deep-Learning/Assignment2/src/datamodule_oxpet.py:68: UserWarning: Argument(s) 'var_limit' are not valid for transform GaussNoise
+  A.GaussNoise(var_limit=(5.0, 20.0), p=1.0),
+IMPROVEMENT 1: Using augmentation transforms
+Train samples: 2944
+Val samples: 736
+Test samples: 3669
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/callbacks/model_checkpoint.py:751: Checkpoint directory /home/bzhao/Deep-Learning/Assignment2/outputs/checkpoints exists and is not empty.
+LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
+/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/utilities/model_summary/model_summary.py:231: Precision 16-mixed is not supported by the model summary.  Estimated model size in MB will not be accurate. Using 32 bits instead.
+
+  | Name      | Type                   | Params | Mode
+-------------------------------------------------------------
+0 | model     | UNetPlusPlus           | 148 M  | train
+1 | criterion | HybridLoss             | 0      | train
+2 | train_iou | MulticlassJaccardIndex | 0      | train
+3 | val_iou   | MulticlassJaccardIndex | 0      | train
+4 | val_dice  | MulticlassF1Score      | 0      | train
+-------------------------------------------------------------
+148 M     Trainable params
+0         Non-trainable params
+148 M     Total params
+592.242   Total estimated model params size (MB)
+238       Modules in train mode
+0         Modules in eval mode
+Epoch 5:  38%|███▊      | 553/1472 [01:33<02:35,  5.91it/s, v_num=p20n, train_loss_step=0.293, val_loss=0.352, val_mIoU=0.647, val_Dice=0.768, train_loss_epoch=0.350, train_mIoU=0.643] 
+                                                                          
+Metric val_loss improved. New best score: 0.420
+Metric val_loss improved by 0.037 >= min_delta = 0.0. New best score: 0.383
+Metric val_loss improved by 0.023 >= min_delta = 0.0. New best score: 0.360
+Metric val_loss improved by 0.019 >= min_delta = 0.0. New best score: 0.341
+[rank: 0] Received SIGTERM: 15
+Traceback (most recent call last):
+  File "/home/bzhao/Deep-Learning/Assignment2/src/train.py", line 356, in <module>
+    main()
+  File "/home/bzhao/Deep-Learning/Assignment2/src/train.py", line 342, in main
+    best_ckpt = train(args)
+                ^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/src/train.py", line 107, in train
+    trainer.fit(model, dm)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 560, in fit
+    call._call_and_handle_interrupt(
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/call.py", line 49, in _call_and_handle_interrupt
+    return trainer_fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 598, in _fit_impl
+    self._run(model, ckpt_path=ckpt_path)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 1011, in _run
+    results = self._run_stage()
+              ^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/trainer.py", line 1055, in _run_stage
+    self.fit_loop.run()
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py", line 216, in run
+    self.advance()
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/fit_loop.py", line 458, in advance
+    self.epoch_loop.run(self._data_fetcher)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 152, in run
+    self.advance(data_fetcher)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/training_epoch_loop.py", line 348, in advance
+    batch_output = self.automatic_optimization.run(trainer.optimizers[0], batch_idx, kwargs)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 192, in run
+    self._optimizer_step(batch_idx, closure)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/loops/optimization/automatic.py", line 270, in _optimizer_step
+    call._call_lightning_module_hook(
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/trainer/call.py", line 177, in _call_lightning_module_hook
+    output = fn(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/core/module.py", line 1366, in optimizer_step
+    optimizer.step(closure=optimizer_closure)
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/core/optimizer.py", line 154, in step
+    step_output = self._strategy.optimizer_step(self._optimizer, closure, **kwargs)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/strategies/strategy.py", line 239, in optimizer_step
+    return self.precision_plugin.optimizer_step(optimizer, model=model, closure=closure, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/pytorch_lightning/plugins/precision/amp.py", line 95, in optimizer_step
+    step_output = self.scaler.step(optimizer, **kwargs)  # type: ignore[arg-type]
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/amp/grad_scaler.py", line 462, in step
+    retval = self._maybe_opt_step(optimizer, optimizer_state, *args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/amp/grad_scaler.py", line 356, in _maybe_opt_step
+    if not sum(v.item() for v in optimizer_state["found_inf_per_device"].values()):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/amp/grad_scaler.py", line 356, in <genexpr>
+    if not sum(v.item() for v in optimizer_state["found_inf_per_device"].values()):
+               ^^^^^^^^
+  File "/home/bzhao/Deep-Learning/Assignment2/.venv/lib/python3.12/site-packages/torch/utils/data/_utils/signal_handling.py", line 73, in handler
+    _error_if_any_worker_fails()
+RuntimeError: DataLoader worker (pid 788542) is killed by signal: Terminated.
