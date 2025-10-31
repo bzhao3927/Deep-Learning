@@ -163,9 +163,7 @@ Random flips, ±15° rotations, color jitter, blur, and crops regularize trainin
 ### 2. Hybrid Loss (Focal + Dice)
 Combines Focal Loss for class imbalance (border class is only ~5% of pixels) with Dice Loss for direct IoU optimization:
 
-```
-L_hybrid = 0.5 × L_Focal + 0.5 × L_Dice
-```
+$L_{hybrid} = 0.5 \times L_{Focal} + 0.5 \times L_{Dice}$
 
 **Impact:** +3.8% validation mIoU, +0.94% test mIoU over baseline
 
