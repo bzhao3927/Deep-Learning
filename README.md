@@ -2,7 +2,7 @@
 
 Deep learning project implementing UNet++ with deep supervision, hybrid loss function, CBAM attention, and data augmentation for semantic segmentation.
 
-**Authors:** Cade Boiney, Ken Lam, Ognian Trajanov, Benjamin Zhao  
+**Authors:** Benjamin Zhao, Ken Lam, Ognian Trajanov, Cade Boiney  
 **Institution:** Hamilton College  
 **Course:** Deep Learning, Fall 2025
 
@@ -252,7 +252,7 @@ The trained model checkpoint (`best_model.ckpt`) is too large for GitHub (~500MB
 
 ```bibtex
 @misc{zhao2025unetpp,
-  author = {Zhao, Benjamin and Boiney, Cade and Lam, Ken and Trajanov, Ognian},
+  author = {Zhao, Benjamin and Lam, Ken and Trajanov, Ognian and Boiney, Cade},
   title = {UNet++ with Hybrid Loss and CBAM Attention for Pet Segmentation},
   year = {2025},
   publisher = {GitHub},
