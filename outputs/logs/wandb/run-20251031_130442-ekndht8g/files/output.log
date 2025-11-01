@@ -25,7 +25,7 @@ LOCAL_RANK: 0 - CUDA_VISIBLE_DEVICES: [0]
 238       Modules in train mode
 0         Modules in eval mode
 Epoch 53: 100%|██████████| 736/736 [04:02<00:00,  3.04it/s, v_num=ht8g, train_loss_step=0.233, val_loss=0.229, val_mIoU=0.792, val_Dice=0.874, train_loss_epoch=0.223, train_mIoU=0.817]
-Validation DataLoader 0:  17%|█▋        | 31/184 [00:03<00:16,  9.55it/s] 
+                                                                          
 Metric val_loss improved. New best score: 0.461
 Metric val_loss improved by 0.045 >= min_delta = 0.0. New best score: 0.415
 Metric val_loss improved by 0.028 >= min_delta = 0.0. New best score: 0.387
@@ -57,3 +57,15 @@ Metric val_loss improved by 0.001 >= min_delta = 0.0. New best score: 0.233
 Metric val_loss improved by 0.002 >= min_delta = 0.0. New best score: 0.231
 Metric val_loss improved by 0.001 >= min_delta = 0.0. New best score: 0.229
 Metric val_loss improved by 0.000 >= min_delta = 0.0. New best score: 0.229
+Metric val_loss improved by 0.000 >= min_delta = 0.0. New best score: 0.228
+Metric val_loss improved by 0.003 >= min_delta = 0.0. New best score: 0.225
+Metric val_loss improved by 0.002 >= min_delta = 0.0. New best score: 0.222
+Metric val_loss improved by 0.000 >= min_delta = 0.0. New best score: 0.222
+Metric val_loss improved by 0.001 >= min_delta = 0.0. New best score: 0.221
+Monitored metric val_loss did not improve in the last 15 records. Best score: 0.221. Signaling Trainer to stop.
+Training complete!
+Best checkpoint: /home/bzhao/Deep-Learning/Assignment2/outputs/checkpoints/unetpp-epoch=90-val_mIoU=0.7976.ckpt
+Best val_mIoU: 0.7976
+
+To evaluate: python src/train.py --mode eval --checkpoint /home/bzhao/Deep-Learning/Assignment2/outputs/checkpoints/unetpp-epoch=90-val_mIoU=0.7976.ckpt
+To evaluate with TTA: python src/train.py --mode eval --checkpoint /home/bzhao/Deep-Learning/Assignment2/outputs/checkpoints/unetpp-epoch=90-val_mIoU=0.7976.ckpt --tta
