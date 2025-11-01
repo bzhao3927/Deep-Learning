@@ -18,7 +18,7 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 
 # 2. Download dataset
-python oxpet_download_and_viz_fixed.py --root ~/data --split trainval --classes trimap
+python oxpet_download_and_viz.py --root ~/data --split trainval --classes trimap
 
 # 3. Train model (~10 hours)
 python src/train.py --mode train --data_root ~/data/oxford-iiit-pet \
@@ -77,7 +77,7 @@ Download Oxford-IIIT Pet Dataset:
 
 ```bash
 mkdir -p ~/data
-python oxpet_download_and_viz_fixed.py --root ~/data --split trainval --classes trimap
+python oxpet_download_and_viz.py --root ~/data --split trainval --classes trimap
 ```
 
 **Dataset structure:**
@@ -195,8 +195,8 @@ Channel and spatial attention modules in the decoder enable adaptive feature ref
 Assignment2/
 ├── README.md
 ├── requirements.txt
-├── oxpet_download_and_viz_fixed.py
-├── plot.py
+├── report.pdf
+├── oxpet_download_and_viz.py
 ├── src/
 │   ├── datamodule_oxpet.py
 │   ├── model_unetpp.py
@@ -238,6 +238,13 @@ python plot.py  # Creates outputs/miou_curves.png and outputs/loss_curves.png
 ```bash
 --deep_supervision --use_attention --use_augmentation --use_hybrid_loss
 ```
+
+---
+
+## Notes
+
+**Model Checkpoint:**  
+The trained model checkpoint (`best_model.ckpt`) is too large for GitHub (~500MB+). All results are fully reproducible using the training commands above. Training logs and metrics are available on our [W&B Dashboard](https://wandb.ai/bzhao-hamilton-college/unetpp-oxpet-segmentation).
 
 ---
 
