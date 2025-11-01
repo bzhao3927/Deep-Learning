@@ -1,6 +1,6 @@
-# UNet++ with Data Augmentation and Hybrid Loss for Pet Segmentation
+# UNet++ with Hybrid Loss and CBAM Attention for Pet Segmentation
 
-Deep learning project implementing UNet++ with hybrid loss function and data augmentation for semantic segmentation.
+Deep learning project implementing UNet++ with deep supervision, hybrid loss function, CBAM attention, and data augmentation for semantic segmentation.
 
 **Authors:** Cade Boiney, Ken Lam, Ognian Trajanov, Benjamin Zhao  
 **Institution:** Hamilton College  
@@ -37,14 +37,15 @@ python src/train.py --mode eval --data_root ~/data/oxford-iiit-pet \
 
 ## Overview
 
-UNet++ implementation with two key improvements:
+UNet++ implementation with three key improvements:
 
-1. **Enhanced Data Augmentation** - Random flips, rotations, color jitter, blur, and crops
-2. **Hybrid Loss Function** - Combines Focal Loss (class imbalance) + Dice Loss (segmentation quality)
+1. **Deep Supervision** - Multi-scale auxiliary outputs (~3% mIoU gain, most impactful)
+2. **Hybrid Loss Function** - Combines Focal Loss (class imbalance) + Dice Loss (region overlap)
+3. **CBAM Attention** - Channel and spatial attention in decoder for adaptive feature refinement
 
 **Final Performance:**
 - Test mIoU: **80.94%**
-- Validation mIoU: **82.1%**
+- Validation mIoU: **80.6%**
 - Training time: **~10 hours** (RTX 3090, early stopped at epoch 131)
 
 ---
@@ -148,24 +149,33 @@ ls -lh outputs/checkpoints/
 
 | Configuration | Val mIoU (%) | Test mIoU (%) |
 |---------------|--------------|---------------|
-| Baseline (deep supervision + data aug) | 78.3 | 80.00 |
-| + Hybrid Loss + CBAM | 82.1 | **80.94** |
+| Baseline (deep supervision + data aug) | 79.5 | 80.00 |
+| + Hybrid Loss | 79.8 | 80.13 |
+| + Hybrid Loss + CBAM | 80.6 | **80.94** |
 
-**Validation improvement: +3.8% | Test improvement: +0.94%**
+**Improvements:**
+- Deep supervision alone: **~3% mIoU** (from ~76% to ~79%) - *most impactful*
+- Hybrid loss: **+0.3% validation, +0.13% test**
+- CBAM attention: **+0.8% validation, +0.81% test**
+- **Total incremental improvement: +1.1% validation, +0.94% test**
 
 ---
 
-## Key Improvements
+## Key Components
 
-### 1. Enhanced Data Augmentation
-Random flips, ±15° rotations, color jitter, blur, and crops regularize training and expose the model to diverse geometric, noise, and color variations.
+### 1. Deep Supervision (Most Impactful)
+Multi-scale auxiliary outputs at multiple decoder stages provide direct supervision at different scales, stabilizing training and improving gradient flow. **This alone provides ~3% mIoU improvement**, making it the most critical component.
 
-### 2. Hybrid Loss (Focal + Dice)
+### 2. Data Augmentation
+Random flips, ±15° rotations, color jitter, Gaussian blur, and random crops regularize training and expose the model to diverse geometric and photometric variations.
+
+### 3. Hybrid Loss (Focal + Dice)
 Combines Focal Loss for class imbalance (border class is only ~5% of pixels) with Dice Loss for direct IoU optimization:
 
 $L_{hybrid} = 0.5 \times L_{Focal} + 0.5 \times L_{Dice}$
 
-**Impact:** +3.8% validation mIoU, +0.94% test mIoU over baseline
+### 4. CBAM Attention
+Channel and spatial attention modules in the decoder enable adaptive feature refinement without significant computational cost.
 
 ---
 
@@ -173,9 +183,9 @@ $L_{hybrid} = 0.5 \times L_{Focal} + 0.5 \times L_{Dice}$
 
 **UNet++** with nested skip connections and deep supervision:
 - 6 encoder-decoder levels
-- 32 base channels (doubled per level)
+- 32 base channels (doubled per level, reaching 1024 at bottleneck)
 - CBAM attention modules in decoder
-- AdamW optimizer with cosine annealing
+- AdamW optimizer (lr=1e-3, weight decay=1e-4) with cosine annealing
 
 ---
 
@@ -236,7 +246,7 @@ python plot.py  # Creates outputs/miou_curves.png and outputs/loss_curves.png
 ```bibtex
 @misc{zhao2025unetpp,
   author = {Zhao, Benjamin and Boiney, Cade and Lam, Ken and Trajanov, Ognian},
-  title = {UNet++ with Data Augmentation and Hybrid Loss for Pet Segmentation},
+  title = {UNet++ with Hybrid Loss and CBAM Attention for Pet Segmentation},
   year = {2025},
   publisher = {GitHub},
   url = {https://github.com/bzhao3927/Deep-Learning/tree/main/Assignment2}
